@@ -1,4 +1,0 @@
-start - starts the server. 
-stop - stops the server. is only recognized if the start command was used.
-status - outputs player count and total disconnected since server start.
-update - runs through SteamCMD to reverify the game.

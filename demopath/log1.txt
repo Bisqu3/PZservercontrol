@@ -1,8 +1,0 @@
-player 1 allowed 
-player 1 fully connected  
-player 2 allowed 
-player 2 fully connected  
-player 1 disconnected 
-player 3 allowed 
-player 2 disconnected 
-player 3 fully connected 

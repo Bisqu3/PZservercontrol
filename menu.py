@@ -1,21 +1,27 @@
 #Graphic Dependencies
-from art import *
 from colorama import *
 
 #System Dependencies
 import random
+import datetime
 from pathlib import Path
-import os
+from subprocess import call
 from pysteamcmdwrapper import SteamCMD, SteamCMDException
 
-serverdest = "/workspaces/PZservercontrol/servertest"
-logdest = "/workspaces/PZservercontrol/demopath"
+import config
+
+serverdest = config.serverdest
+logdest = config.logdest
 #
 progdest = str(Path.cwd())
 steamdest = progdest
 
 global ready 
 ready = 1
+
+global _time 
+_time = datetime.datetime.now()
+print(str(_time.day)+"-"+str(_time.month))
 
 colors = [Fore.RED, Fore.WHITE, Fore.BLUE, Fore.GREEN, Fore.YELLOW, Fore.MAGENTA, Style.RESET_ALL]
 key = ["fully connected","disconnected","allowed"]
@@ -26,13 +32,15 @@ status = {
 }
 
 def randomcol():
-    x = random.randint(0, 4)
+    #assigns a random color from the colors list
+    x = random.randint(0, 5)
     return colors[x]
 def printout(text, color):
+    #pairs text with color and prints the result.
     print(color+str(text)+colors[6])
 
 def getplayerstatus():
-    f = open(logdest+"/log1.txt", "r")
+    f = open(logdest+"/28-04-23_10-23-38_user.txt", "r")
     status["allowed"] = 0
     for i in f:
         for word in key:
@@ -46,18 +54,23 @@ def getplayerstatus():
     return status, colors[5], 0
 
 def startserver():
-    os.system(serverdest + "/start.bat")
-    return "Server started. launching monitor", colors[0], 2
+    call(serverdest + "/StartServer64.bat")
+    return "Server Stopped Sucessfully", colors[0], 0
 def updateserver():
     print("Checking SteamCMD...")
     s = SteamCMD(steamdest)
     global ready
     try:
         s.install()
-        result = "SteamCMD Installed"
+        result = "SteamCMD Installed to "+steamdest
     except SteamCMDException:
-        result = "SteamCMD Found."
-    return result, colors[4], 1
+        result = "SteamCMD already installed at "+steamdest
+    try:
+        s.app_update(380870, serverdest, validate=True)
+        result = "Server at "+serverdest+" is up to date"
+    except SteamCMDException:
+        result = "Install Error "+serverdest
+    return result, colors[4], 0
     
 def printhelp():
     f = open(progdest+"/text/help.txt", "r")
@@ -65,9 +78,15 @@ def printhelp():
     f.close()
     return a, colors[0], 0
 
+def rcon():
+    with open("server_control.py") as f:
+        exec(f.read())
+    return "connected?", colors[1], 0
+
 menu_options = {
-    "start": startserver(),
-    "status": getplayerstatus(),
-    "update": updateserver(),
-    "help": printhelp(),
+    "start": startserver,
+    "status": getplayerstatus,
+    "update": updateserver,
+    "help": printhelp,
+    "connect": rcon,
     }

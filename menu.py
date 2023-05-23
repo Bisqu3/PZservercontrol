@@ -10,6 +10,7 @@ from pysteamcmdwrapper import SteamCMD, SteamCMDException
 
 import config
 
+run32 = config.server32
 serverdest = config.serverdest
 logdest = config.logdest
 #
@@ -51,11 +52,24 @@ def getplayerstatus():
     status["fully connected"] -= status["disconnected"]
     status["disconnected"] = 0
     f.close()
-    return status, colors[5], 0
+    return status, colors[1], 0
+
+def start():
+    if run32 == True:
+        call(serverdest + "/StartServer32.bat")
+    else:
+        call(serverdest + "/StartServer64.bat")
 
 def startserver():
-    call(serverdest + "/StartServer64.bat")
-    return "Server Stopped Sucessfully", colors[0], 0
+    x = input("restart server automatically if it crashes? Y/N > ")
+    if x.upper() == "Y":
+        while True:
+            start()
+    elif x.upper() == "N":
+        start()
+    else: 
+        startserver()
+    return "Server returned from running state.", colors[0], 0
 def updateserver():
     print("Checking SteamCMD...")
     s = SteamCMD(steamdest)

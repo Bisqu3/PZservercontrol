@@ -12,13 +12,13 @@ def run(string):
 
 
 def manager():
-    print("RCON SERVER MANAGER")
+    print("RCON SERVER MANAGER V0.1")
     while True:
         x = input(">> ")
         try: 
             print(run(x))
         except:
-            print("Error")
+            print("!Error!")
 
 
 

@@ -1,5 +1,5 @@
 # PZservercontrol
-Python script to help manage dedicated servers using windows. untested for linux.
+Python script to help manage dedicated servers for Project Zomboid using windows. untested for linux.
 
 #Dependencies
 ### Uses py-steamcmd library for automated update and verification
